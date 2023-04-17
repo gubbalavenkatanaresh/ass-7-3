@@ -1,0 +1,15 @@
+.video-container {
+  margin: 10px;
+  width: 300px;
+}
+.thumbnail {
+  height: 200px;
+  width: 300px;
+}
+.profile {
+  height: 80px;
+  width: 50px;
+}
+.video-details {
+  display: flex;
+}

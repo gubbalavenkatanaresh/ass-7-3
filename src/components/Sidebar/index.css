@@ -1,0 +1,15 @@
+.logo-img {
+  display: flex;
+}
+.sidebar-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 20%;
+  padding: 20px;
+}
+.logo {
+  height: 22px;
+  width: 22px;
+  margin: 10px;
+}

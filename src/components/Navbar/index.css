@@ -1,0 +1,29 @@
+.logout-btn {
+  border-color: #3b82f6;
+  color: #3b82f6;
+  cursor: pointer;
+  margin: 10px;
+}
+.website-logo {
+  width: 180px;
+  height: 50px;
+}
+.profile-icon {
+  height: 23px;
+  width: 23px;
+  margin: 10px;
+}
+.dark-icon {
+  height: 30px;
+  width: 30px;
+  margin: 10px;
+}
+.light-icon {
+  height: 30px;
+  width: 30px;
+  margin: 10px;
+}
+.icons-container {
+  display: flex;
+  align-items: center;
+}

@@ -1,0 +1,20 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.card {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border-radius: 10px;
+  width: 300px;
+  align-self: center;
+}
+.logo {
+  width: 200px;
+}
+.form-container {
+  display: flex;
+  flex-direction: column;
+}

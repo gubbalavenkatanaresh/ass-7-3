@@ -1,0 +1,19 @@
+.views-like {
+  display: flex;
+  justify-content: space-between;
+}
+.views {
+  display: flex;
+}
+.likes {
+  display: flex;
+}
+.video-container {
+  flex-grow: 1;
+}
+.bottom {
+  display: flex;
+}
+.profile-details {
+  margin: 10px;
+}
