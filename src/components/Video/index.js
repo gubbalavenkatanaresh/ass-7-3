@@ -23,9 +23,17 @@ const Video = props => {
         return (
           <Link to={`/videos/${id}`}>
             <li className="video-container" onClick={onClickVideo}>
-              <img src={thumbnailUrl} alt="thumbnail" className="thumbnail" />
+              <img
+                src={thumbnailUrl}
+                alt="video thumbnail"
+                className="thumbnail"
+              />
               <div className="video-details">
-                <img src={profileImageUrl} alt="profile" className="profile" />
+                <img
+                  src={profileImageUrl}
+                  alt="channel logo"
+                  className="profile"
+                />
                 <div>
                   <p>{title}</p>
                   <p>{name}</p>

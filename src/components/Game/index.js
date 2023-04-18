@@ -7,8 +7,12 @@ const Game = props => {
   return (
     <Link to={`/videos/${id}`} className="game-container">
       <li>
-        <img src={thumbnailUrl} alt="thumbnail" className="game-thumbnail" />
-        <h1>{title}</h1>
+        <img
+          src={thumbnailUrl}
+          alt="video thumbnail"
+          className="game-thumbnail"
+        />
+        <p>{title}</p>
         <p>{viewCount} Watching Worldwide</p>
       </li>
     </Link>

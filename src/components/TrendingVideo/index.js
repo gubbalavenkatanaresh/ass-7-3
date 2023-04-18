@@ -23,13 +23,18 @@ const TrendingVideo = props => {
         return (
           <Link to={`/videos/${id}`}>
             <li className="video-details" onClick={onClickVideo}>
-              <img src={thumbnailUrl} alt="thumbnail" className="thumbnail" />
+              <img
+                src={thumbnailUrl}
+                alt="video thumbnail"
+                className="thumbnail"
+              />
               <div>
                 <p>{title}</p>
                 <p>{name}</p>
                 <div>
                   <p>{viewCount} views</p>
                   <p>{distanceTime}</p>
+                  <p>{publishedAt}</p>
                 </div>
               </div>
             </li>

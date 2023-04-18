@@ -1,5 +1,5 @@
 import {Component} from 'react'
-import {Switch, Route} from 'react-router-dom'
+import {Switch, Route, Redirect} from 'react-router-dom'
 
 import ModeContext from './context/ModeContext'
 import ActiveMenuContext from './context/ActiveMenuContext'
@@ -10,6 +10,8 @@ import PlayVideo from './components/PlayVideo'
 import Trending from './components/Trending'
 import Gaming from './components/Gaming'
 import SavedVideos from './components/SavedVideos'
+import ProtectedRoute from './components/ProtectedRoute'
+import NotFound from './components/notFound'
 import './App.css'
 
 const activeMenuConstants = {
@@ -61,11 +63,17 @@ class App extends Component {
           >
             <Switch>
               <Route path="/login" component={Login} />
-              <Route exact path="/" component={Home} />
-              <Route exact path="/videos/:id" component={PlayVideo} />
-              <Route exact path="/trending" component={Trending} />
-              <Route exact path="/gaming" component={Gaming} />
-              <Route exact path="/saved-videos" component={SavedVideos} />
+              <ProtectedRoute exact path="/" component={Home} />
+              <ProtectedRoute exact path="/videos/:id" component={PlayVideo} />
+              <ProtectedRoute exact path="/trending" component={Trending} />
+              <ProtectedRoute exact path="/gaming" component={Gaming} />
+              <ProtectedRoute
+                exact
+                path="/saved-videos"
+                component={SavedVideos}
+              />
+              <ProtectedRoute exact path="/not-found" component={NotFound} />
+              <Redirect to="/not-found" />
             </Switch>
           </SavedVideosContext.Provider>
         </ActiveMenuContext.Provider>

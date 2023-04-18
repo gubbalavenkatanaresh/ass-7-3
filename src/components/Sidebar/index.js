@@ -1,5 +1,6 @@
 import SidebarMenus from '../SidebarMenus'
 import ModeContext from '../../context/ModeContext'
+import {SidebarContainer} from './styledComponent'
 import './index.css'
 
 const Sidebar = () => (
@@ -7,10 +8,10 @@ const Sidebar = () => (
     {value => {
       const {isDark} = value
       return (
-        <div className="sidebar-container">
+        <SidebarContainer dark={isDark}>
           <SidebarMenus />
           <div>
-            <h1>CONTACT US</h1>
+            <p>CONTACT US</p>
             <div className="logo-img">
               <img
                 src="https://assets.ccbp.in/frontend/react-js/nxt-watch-facebook-logo-img.png"
@@ -30,7 +31,7 @@ const Sidebar = () => (
             </div>
             <p>Enjoy! Now to see your channels and recommendations!</p>
           </div>
-        </div>
+        </SidebarContainer>
       )
     }}
   </ModeContext.Consumer>

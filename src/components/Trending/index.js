@@ -4,7 +4,9 @@ import Loader from 'react-loader-spinner'
 
 import {HiFire} from 'react-icons/hi'
 import ModeContext from '../../context/ModeContext'
+import {TrendingContainer} from './styledComponent'
 import TrendingVideo from '../TrendingVideo'
+import FailureView from '../FailureView'
 import Navbar from '../Navbar'
 import './index.css'
 import Sidebar from '../Sidebar'
@@ -20,6 +22,10 @@ class Trending extends Component {
   state = {presentView: constants.initial, trendingVideos: []}
 
   componentDidMount() {
+    this.getTrendingVideos()
+  }
+
+  clickRetry = () => {
     this.getTrendingVideos()
   }
 
@@ -53,25 +59,7 @@ class Trending extends Component {
     }
   }
 
-  renderFailureView = () => (
-    <ModeContext.Consumer>
-      {value => {
-        const {isDark} = value
-        const failureImage = isDark
-          ? 'https://assets.ccbp.in/frontend/react-js/nxt-watch-failure-view-dark-theme-img.png'
-          : 'https://assets.ccbp.in/frontend/react-js/nxt-watch-failure-view-light-theme-img.png'
-        return (
-          <div className="failure-container">
-            <img src={failureImage} alt="failureImage" />
-            <h1>Oops! Something Went Wrong</h1>
-            <p>We are having same trouble to complete your request.</p>
-            <p>Please try again.</p>
-            <button type="button">Retry</button>
-          </div>
-        )
-      }}
-    </ModeContext.Consumer>
-  )
+  renderFailureView = () => <FailureView clickRetry={this.clickRetry} />
 
   renderLoadingView = () => (
     <div className="loader-container" data-testid="loader">
@@ -84,7 +72,7 @@ class Trending extends Component {
     return (
       <ul>
         {trendingVideos.map(eachVideo => (
-          <TrendingVideo key={eachVideo.id} eachVideo={eachVideo} />
+          <TrendingVideo key={eachVideo.thumbnail_url} eachVideo={eachVideo} />
         ))}
       </ul>
     )
@@ -106,19 +94,28 @@ class Trending extends Component {
 
   render() {
     return (
-      <>
-        <Navbar />
-        <div className="home-container">
-          <Sidebar />
-          <div>
-            <div>
-              <HiFire />
-              <h1>Trending</h1>
+      <ModeContext.Consumer>
+        {value => {
+          const {isDark} = value
+          return (
+            <div data-testid="trending">
+              <Navbar />
+              <div className="home-container">
+                <Sidebar />
+                <div className="home-card">
+                  <div>
+                    <HiFire />
+                    <h1>Trending</h1>
+                  </div>
+                  <TrendingContainer bgColor={isDark} data-testid="trending">
+                    {this.renderResult()}
+                  </TrendingContainer>
+                </div>
+              </div>
             </div>
-            {this.renderResult()}
-          </div>
-        </div>
-      </>
+          )
+        }}
+      </ModeContext.Consumer>
     )
   }
 }

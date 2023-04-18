@@ -3,6 +3,7 @@ import Cookies from 'js-cookie'
 import {Redirect} from 'react-router-dom'
 
 import ModeContext from '../../context/ModeContext'
+import {CustomButton} from './styledComponent'
 
 import './index.css'
 
@@ -88,7 +89,7 @@ class Login extends Component {
           return (
             <div className={containerClassName}>
               <div className={cardClassName}>
-                <img src={logoUrl} alt="logo" className="logo" />
+                <img src={logoUrl} alt="website logo" className="logo" />
                 <form className="form-container" onSubmit={this.submitForm}>
                   <label htmlFor="username">USERNAME</label>
                   <input
@@ -117,9 +118,9 @@ class Login extends Component {
                     />
                     <label htmlFor="checkbox">Show Password</label>
                   </div>
-                  <button type="submit" className="login-btn">
+                  <CustomButton type="submit" className="login-btn">
                     Login
-                  </button>
+                  </CustomButton>
                   {showSubmitError && <p className="error-msg">*{errorMsg}</p>}
                 </form>
               </div>

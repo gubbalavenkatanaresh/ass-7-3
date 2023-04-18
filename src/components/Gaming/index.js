@@ -4,6 +4,8 @@ import Loader from 'react-loader-spinner'
 import {SiYoutubegaming} from 'react-icons/si'
 
 import ModeContext from '../../context/ModeContext'
+import FailureView from '../FailureView'
+import {TrendingContainer} from './styledComponent'
 import Game from '../Game'
 import Navbar from '../Navbar'
 import './index.css'
@@ -23,7 +25,12 @@ class Gaming extends Component {
     this.getGames()
   }
 
+  clickRetry = () => {
+    this.getGames()
+  }
+
   getGames = async () => {
+    this.setState({presentView: constants.inProgress})
     const jwtToken = Cookies.get('jwt_token')
     const apiUrl = 'https://apis.ccbp.in/videos/gaming'
     const options = {
@@ -33,6 +40,7 @@ class Gaming extends Component {
       method: 'GET',
     }
     const response = await fetch(apiUrl, options)
+    console.log(response.ok)
     const data = await response.json()
     const updatedData = data.videos.map(eachVideo => ({
       id: eachVideo.id,
@@ -47,25 +55,7 @@ class Gaming extends Component {
     }
   }
 
-  renderFailureView = () => (
-    <ModeContext.Consumer>
-      {value => {
-        const {isDark} = value
-        const failureImage = isDark
-          ? 'https://assets.ccbp.in/frontend/react-js/nxt-watch-failure-view-dark-theme-img.png'
-          : 'https://assets.ccbp.in/frontend/react-js/nxt-watch-failure-view-light-theme-img.png'
-        return (
-          <div className="failure-container">
-            <img src={failureImage} alt="failureImage" />
-            <h1>Oops! Something Went Wrong</h1>
-            <p>We are having same trouble to complete your request.</p>
-            <p>Please try again.</p>
-            <button type="button">Retry</button>
-          </div>
-        )
-      }}
-    </ModeContext.Consumer>
-  )
+  renderFailureView = () => <FailureView clickRetry={this.clickRetry} />
 
   renderLoadingView = () => (
     <div className="loader-container" data-testid="loader">
@@ -79,7 +69,7 @@ class Gaming extends Component {
     return (
       <ul className="games-list">
         {gamesList.map(eachGame => (
-          <Game key={eachGame.id} eachGame={eachGame} />
+          <Game key={eachGame.title} eachGame={eachGame} />
         ))}
       </ul>
     )
@@ -87,6 +77,7 @@ class Gaming extends Component {
 
   renderResult = () => {
     const {presentView} = this.state
+    console.log(presentView)
     switch (presentView) {
       case constants.failure:
         return this.renderFailureView()
@@ -101,19 +92,28 @@ class Gaming extends Component {
 
   render() {
     return (
-      <>
-        <Navbar />
-        <div className="home-container">
-          <Sidebar />
-          <div>
-            <div>
-              <SiYoutubegaming />
-              <h1>Gaming</h1>
+      <ModeContext.Consumer>
+        {value => {
+          const {isDark} = value
+          return (
+            <div data-testid="gaming">
+              <Navbar />
+              <div className="home-container">
+                <Sidebar />
+                <div className="home-card">
+                  <div>
+                    <SiYoutubegaming />
+                    <h1>Gaming</h1>
+                  </div>
+                  <TrendingContainer bgColor={isDark} data-testid="gaming">
+                    {this.renderResult()}
+                  </TrendingContainer>
+                </div>
+              </div>
             </div>
-            {this.renderResult()}
-          </div>
-        </div>
-      </>
+          )
+        }}
+      </ModeContext.Consumer>
     )
   }
 }

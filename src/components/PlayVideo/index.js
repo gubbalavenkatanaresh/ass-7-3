@@ -6,7 +6,7 @@ import {formatDistanceToNow} from 'date-fns'
 import {AiOutlineDislike, AiOutlineLike} from 'react-icons/ai'
 import {RiMenuAddFill} from 'react-icons/ri'
 
-import {CustomLike} from './styledComponent'
+import {CustomLike, TrendingContainer} from './styledComponent'
 import ModeContext from '../../context/ModeContext'
 import SavedVideosContext from '../../context/SavedVideosContext'
 import Navbar from '../Navbar'
@@ -33,11 +33,17 @@ class PlayVideo extends Component {
   }
 
   clickLike = () => {
-    this.setState(prevState => ({isLike: !prevState.isLike}))
+    this.setState(prevState => ({
+      isLike: !prevState.isLike,
+      isDislike: prevState.isLike,
+    }))
   }
 
   clickDislike = () => {
-    this.setState(prevState => ({isDislike: !prevState.isDislike}))
+    this.setState(prevState => ({
+      isLike: prevState.isDisLike,
+      isDislike: !prevState.isDislike,
+    }))
   }
 
   getVideoDetails = async () => {
@@ -125,6 +131,7 @@ class PlayVideo extends Component {
           }
 
           const isSaved = savedVideos.some(each => each.id === id)
+          const saveText = isSaved ? 'Saved' : 'Save'
 
           return (
             <>
@@ -133,6 +140,7 @@ class PlayVideo extends Component {
               <div className="views-like">
                 <div className="views">
                   <p>{viewCount} views</p>
+                  <p>{publishedAt}</p>
                   <p>{timeDistance}</p>
                 </div>
                 <div className="likes">
@@ -146,7 +154,7 @@ class PlayVideo extends Component {
                   </CustomLike>
                   <CustomLike onClick={onClickSaveBtn} isClicked={isSaved}>
                     <RiMenuAddFill />
-                    Save
+                    {saveText}
                   </CustomLike>
                 </div>
               </div>
@@ -155,7 +163,7 @@ class PlayVideo extends Component {
                 <div>
                   <img
                     src={profileImageUrl}
-                    alt="profileImage"
+                    alt="channel logo"
                     className="profile"
                   />
                 </div>
@@ -188,13 +196,25 @@ class PlayVideo extends Component {
 
   render() {
     return (
-      <>
-        <Navbar />
-        <div className="home-container">
-          <Sidebar />
-          <div className="video-container">{this.renderResultView()}</div>
-        </div>
-      </>
+      <ModeContext.Consumer>
+        {value => {
+          const {isDark} = value
+          return (
+            <div data-testid="videoItemDetails">
+              <Navbar />
+              <div className="home-container">
+                <Sidebar />
+                <TrendingContainer
+                  bgColor={isDark}
+                  data-testid="videoItemDetails"
+                >
+                  {this.renderResultView()}
+                </TrendingContainer>
+              </div>
+            </div>
+          )
+        }}
+      </ModeContext.Consumer>
     )
   }
 }

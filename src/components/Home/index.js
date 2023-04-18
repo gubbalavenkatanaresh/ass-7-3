@@ -3,10 +3,11 @@ import Cookies from 'js-cookie'
 import Loader from 'react-loader-spinner'
 import {AiOutlineClose, AiOutlineSearch} from 'react-icons/ai'
 
-import {CustomButton, HomeContainer} from './styledComponent'
+import {CustomButton, HomeContainer, BannerContainer} from './styledComponent'
 import Video from '../Video'
 
 import ModeContext from '../../context/ModeContext'
+import FailureView from '../FailureView'
 
 import Navbar from '../Navbar'
 import './index.css'
@@ -32,6 +33,10 @@ class Home extends Component {
   }
 
   componentDidMount = () => {
+    this.getVideos()
+  }
+
+  clickRetry = () => {
     this.getVideos()
   }
 
@@ -75,25 +80,7 @@ class Home extends Component {
     </div>
   )
 
-  failureView = () => (
-    <ModeContext.Consumer>
-      {value => {
-        const {isDark} = value
-        const failureImage = isDark
-          ? 'https://assets.ccbp.in/frontend/react-js/nxt-watch-failure-view-dark-theme-img.png'
-          : 'https://assets.ccbp.in/frontend/react-js/nxt-watch-failure-view-light-theme-img.png'
-        return (
-          <div className="failure-container">
-            <img src={failureImage} alt="failureImage" />
-            <h1>Oops! Something Went Wrong</h1>
-            <p>We are having same trouble to complete your request.</p>
-            <p>Please try again.</p>
-            <button type="button">Retry</button>
-          </div>
-        )
-      }}
-    </ModeContext.Consumer>
-  )
+  failureView = () => <FailureView clickRetry={this.clickRetry} />
 
   successView = () => {
     const {videosList} = this.state
@@ -148,45 +135,54 @@ class Home extends Component {
         {value => {
           const {isDark} = value
           return (
-            <>
+            <div data-testid="home">
               <Navbar />
               <div className="home-container">
                 <Sidebar />
                 <div className="home-card">
                   {showBanner && (
-                    <div className="banner-container">
+                    <BannerContainer data-testid="banner">
                       <div>
                         <img
                           src="https://assets.ccbp.in/frontend/react-js/nxt-watch-logo-light-theme-img.png"
-                          alt="logo"
+                          alt="nxt watch logo"
                           className="website-logo"
                         />
                         <p>Buy Nxt Watch Premium prepaid plans with UPI</p>
-                        <button type="button">GET IT</button>
+                        <button type="button">GET IT NOW</button>
                       </div>
-                      <AiOutlineClose
-                        className="close-icon"
+                      <button
+                        type="button"
+                        data-testid="close"
                         onClick={this.closeBanner}
-                      />
-                    </div>
+                      >
+                        <AiOutlineClose className="close-icon" />
+                      </button>
+                    </BannerContainer>
                   )}
-                  <div className="search-input-container">
-                    <input
-                      type="search"
-                      className="search-input"
-                      value={searchValue}
-                      onKeyDown={this.pressEnter}
-                      onChange={this.onChangeSearch}
-                    />
-                    <AiOutlineSearch
-                      className="search-icon"
-                      onClick={this.clickSearchIcon}
-                    />
-                  </div>
-                  <HomeContainer>{this.renderResult()}</HomeContainer>
+                  <HomeContainer bgColor={isDark} data-testid="home">
+                    <div className="search-input-container">
+                      <input
+                        type="search"
+                        className="search-input"
+                        value={searchValue}
+                        onKeyDown={this.pressEnter}
+                        onChange={this.onChangeSearch}
+                      />
+                      <button
+                        type="button"
+                        onClick={this.clickSearchIcon}
+                        data-testid="searchButton"
+                      >
+                        <AiOutlineSearch className="search-icon" />
+                      </button>
+                    </div>
+
+                    {this.renderResult()}
+                  </HomeContainer>
                 </div>
               </div>
-            </>
+            </div>
           )
         }}
       </ModeContext.Consumer>
