@@ -4,8 +4,13 @@ import Loader from 'react-loader-spinner'
 import {SiYoutubegaming} from 'react-icons/si'
 
 import ModeContext from '../../context/ModeContext'
-import FailureView from '../FailureView'
-import {TrendingContainer} from './styledComponent'
+import {
+  TrendingContainer,
+  FailureContainer,
+  CustomButton,
+  FailureImg,
+  FailureText,
+} from './styledComponent'
 import Game from '../Game'
 import Navbar from '../Navbar'
 import './index.css'
@@ -25,10 +30,6 @@ class Gaming extends Component {
     this.getGames()
   }
 
-  clickRetry = () => {
-    this.getGames()
-  }
-
   getGames = async () => {
     this.setState({presentView: constants.inProgress})
     const jwtToken = Cookies.get('jwt_token')
@@ -41,21 +42,47 @@ class Gaming extends Component {
     }
     const response = await fetch(apiUrl, options)
     console.log(response.ok)
-    const data = await response.json()
-    const updatedData = data.videos.map(eachVideo => ({
-      id: eachVideo.id,
-      title: eachVideo.title,
-      thumbnailUrl: eachVideo.thumbnail_url,
-      viewCount: eachVideo.view_count,
-    }))
     if (response.ok) {
+      const data = await response.json()
+      const updatedData = data.videos.map(eachVideo => ({
+        id: eachVideo.id,
+        title: eachVideo.title,
+        thumbnailUrl: eachVideo.thumbnail_url,
+        viewCount: eachVideo.view_count,
+      }))
       this.setState({gamesList: updatedData, presentView: constants.success})
     } else {
       this.setState({presentView: constants.failure})
     }
   }
 
-  renderFailureView = () => <FailureView clickRetry={this.clickRetry} />
+  renderFailureView = () => (
+    <ModeContext.Consumer>
+      {value => {
+        const {isDark} = value
+        const failureImage = isDark
+          ? 'https://assets.ccbp.in/frontend/react-js/nxt-watch-failure-view-dark-theme-img.png'
+          : 'https://assets.ccbp.in/frontend/react-js/nxt-watch-failure-view-light-theme-img.png'
+        console.log(isDark)
+        return (
+          <FailureContainer>
+            <FailureImg
+              src={failureImage}
+              alt="failure view"
+              className="failure-img"
+            />
+            <FailureText dark={isDark}>Oops! Something Went Wrong</FailureText>
+            <FailureText as="p" dark={isDark}>
+              We are having some trouble
+            </FailureText>
+            <CustomButton type="button" onClick={this.getGames}>
+              Retry
+            </CustomButton>
+          </FailureContainer>
+        )
+      }}
+    </ModeContext.Consumer>
+  )
 
   renderLoadingView = () => (
     <div className="loader-container" data-testid="loader">
@@ -105,7 +132,7 @@ class Gaming extends Component {
                     <SiYoutubegaming />
                     <h1>Gaming</h1>
                   </div>
-                  <TrendingContainer bgColor={isDark} data-testid="gaming">
+                  <TrendingContainer data-testid="gaming" bgColor={isDark}>
                     {this.renderResult()}
                   </TrendingContainer>
                 </div>

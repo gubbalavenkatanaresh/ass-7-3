@@ -1,6 +1,6 @@
 import SidebarMenus from '../SidebarMenus'
 import ModeContext from '../../context/ModeContext'
-import {SidebarContainer} from './styledComponent'
+import {SidebarInSmall} from './styledComponent'
 import './index.css'
 
 const Sidebar = () => (
@@ -8,7 +8,7 @@ const Sidebar = () => (
     {value => {
       const {isDark} = value
       return (
-        <SidebarContainer dark={isDark}>
+        <SidebarInSmall dark={isDark}>
           <SidebarMenus />
           <div>
             <p>CONTACT US</p>
@@ -31,7 +31,7 @@ const Sidebar = () => (
             </div>
             <p>Enjoy! Now to see your channels and recommendations!</p>
           </div>
-        </SidebarContainer>
+        </SidebarInSmall>
       )
     }}
   </ModeContext.Consumer>

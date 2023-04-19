@@ -4,9 +4,8 @@ import Loader from 'react-loader-spinner'
 
 import {HiFire} from 'react-icons/hi'
 import ModeContext from '../../context/ModeContext'
-import {TrendingContainer} from './styledComponent'
+import {TrendingContainer, CustomButton} from './styledComponent'
 import TrendingVideo from '../TrendingVideo'
-import FailureView from '../FailureView'
 import Navbar from '../Navbar'
 import './index.css'
 import Sidebar from '../Sidebar'
@@ -40,16 +39,17 @@ class Trending extends Component {
       method: 'GET',
     }
     const response = await fetch(apiUrl, options)
-    const data = await response.json()
-    const updatedData = data.videos.map(eachVideo => ({
-      id: eachVideo.id,
-      title: eachVideo.title,
-      thumbnailUrl: eachVideo.thumbnail_url,
-      channel: eachVideo.channel,
-      viewCount: eachVideo.view_count,
-      publishedAt: eachVideo.published_at,
-    }))
+
     if (response.ok) {
+      const data = await response.json()
+      const updatedData = data.videos.map(eachVideo => ({
+        id: eachVideo.id,
+        title: eachVideo.title,
+        thumbnailUrl: eachVideo.thumbnail_url,
+        channel: eachVideo.channel,
+        viewCount: eachVideo.view_count,
+        publishedAt: eachVideo.published_at,
+      }))
       this.setState({
         trendingVideos: updatedData,
         presentView: constants.success,
@@ -59,7 +59,34 @@ class Trending extends Component {
     }
   }
 
-  renderFailureView = () => <FailureView clickRetry={this.clickRetry} />
+  renderFailureView = () => (
+    <ModeContext.Consumer>
+      {value => {
+        const {isDark} = value
+        const failureImage = isDark
+          ? 'https://assets.ccbp.in/frontend/react-js/nxt-watch-failure-view-dark-theme-img.png'
+          : 'https://assets.ccbp.in/frontend/react-js/nxt-watch-failure-view-light-theme-img.png'
+        console.log(isDark)
+        return (
+          <div className="failure-container">
+            <img src={failureImage} alt="failure view" />
+            <h1>Oops! Something Went Wrong</h1>
+            <p>
+              We are having some trouble to complete your request. Please try
+              again.
+            </p>
+            <CustomButton
+              type="button"
+              onClick={this.getTrendingVideos}
+              className="retry-btn"
+            >
+              Retry
+            </CustomButton>
+          </div>
+        )
+      }}
+    </ModeContext.Consumer>
+  )
 
   renderLoadingView = () => (
     <div className="loader-container" data-testid="loader">

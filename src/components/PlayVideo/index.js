@@ -6,7 +6,7 @@ import {formatDistanceToNow} from 'date-fns'
 import {AiOutlineDislike, AiOutlineLike} from 'react-icons/ai'
 import {RiMenuAddFill} from 'react-icons/ri'
 
-import {CustomLike, TrendingContainer} from './styledComponent'
+import {CustomLike, TrendingContainer, CustomButton} from './styledComponent'
 import ModeContext from '../../context/ModeContext'
 import SavedVideosContext from '../../context/SavedVideosContext'
 import Navbar from '../Navbar'
@@ -59,18 +59,18 @@ class PlayVideo extends Component {
       method: 'GET',
     }
     const response = await fetch(videoUrl, options)
-    const data = await response.json()
-    const updatedData = {
-      id: data.video_details.id,
-      title: data.video_details.title,
-      videoUrl: data.video_details.video_url,
-      thumbnailUrl: data.video_details.thumbnail_url,
-      channel: data.video_details.channel,
-      viewCount: data.video_details.view_count,
-      publishedAt: data.video_details.published_at,
-      description: data.video_details.description,
-    }
     if (response.ok) {
+      const data = await response.json()
+      const updatedData = {
+        id: data.video_details.id,
+        title: data.video_details.title,
+        videoUrl: data.video_details.video_url,
+        thumbnailUrl: data.video_details.thumbnail_url,
+        channel: data.video_details.channel,
+        viewCount: data.video_details.view_count,
+        publishedAt: data.video_details.published_at,
+        description: data.video_details.description,
+      }
       this.setState({videoDetails: updatedData, presentView: constants.success})
     } else {
       this.setState({presentView: constants.failure})
@@ -92,11 +92,15 @@ class PlayVideo extends Component {
           : 'https://assets.ccbp.in/frontend/react-js/nxt-watch-failure-view-light-theme-img.png'
         return (
           <div className="failure-container">
-            <img src={failureImage} alt="failureImage" />
+            <img src={failureImage} alt="failure view" />
             <h1>Oops! Something Went Wrong</h1>
-            <p>We are having same trouble to complete your request.</p>
-            <p>Please try again.</p>
-            <button type="button">Retry</button>
+            <p>
+              We are having some trouble to complete your request. Please try
+              again.
+            </p>
+            <CustomButton type="button" onClick={this.getVideoDetails}>
+              Retry
+            </CustomButton>
           </div>
         )
       }}

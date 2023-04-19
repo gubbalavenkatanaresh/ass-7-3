@@ -11,7 +11,7 @@ import Trending from './components/Trending'
 import Gaming from './components/Gaming'
 import SavedVideos from './components/SavedVideos'
 import ProtectedRoute from './components/ProtectedRoute'
-import NotFound from './components/notFound'
+import NotFound from './components/NotFound'
 import './App.css'
 
 const activeMenuConstants = {
@@ -64,7 +64,6 @@ class App extends Component {
             <Switch>
               <Route path="/login" component={Login} />
               <ProtectedRoute exact path="/" component={Home} />
-              <ProtectedRoute exact path="/videos/:id" component={PlayVideo} />
               <ProtectedRoute exact path="/trending" component={Trending} />
               <ProtectedRoute exact path="/gaming" component={Gaming} />
               <ProtectedRoute
@@ -72,6 +71,7 @@ class App extends Component {
                 path="/saved-videos"
                 component={SavedVideos}
               />
+              <ProtectedRoute exact path="/videos/:id" component={PlayVideo} />
               <ProtectedRoute exact path="/not-found" component={NotFound} />
               <Redirect to="/not-found" />
             </Switch>

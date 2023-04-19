@@ -3,11 +3,17 @@ import Cookies from 'js-cookie'
 import Loader from 'react-loader-spinner'
 import {AiOutlineClose, AiOutlineSearch} from 'react-icons/ai'
 
-import {CustomButton, HomeContainer, BannerContainer} from './styledComponent'
+import {
+  CustomButton,
+  HomeContainer,
+  BannerContainer,
+  NoVideosContainer,
+  FailureImg,
+  FailureText,
+} from './styledComponent'
 import Video from '../Video'
 
 import ModeContext from '../../context/ModeContext'
-import FailureView from '../FailureView'
 
 import Navbar from '../Navbar'
 import './index.css'
@@ -36,10 +42,6 @@ class Home extends Component {
     this.getVideos()
   }
 
-  clickRetry = () => {
-    this.getVideos()
-  }
-
   getVideos = async () => {
     this.setState({isLoading: renderConstants.inProgress})
     const {searchValue} = this.state
@@ -52,9 +54,17 @@ class Home extends Component {
       method: 'GET',
     }
     const response = await fetch(apiUrl, options)
-    const data = await response.json()
     if (response.ok) {
-      this.setState({videosList: data, isLoading: renderConstants.success})
+      const data = await response.json()
+      const videos = data.videos.map(eachVideo => ({
+        id: eachVideo.id,
+        title: eachVideo.title,
+        thumbnailUrl: eachVideo.thumbnail_url,
+        channel: eachVideo.channel,
+        viewCount: eachVideo.view_count,
+        publishedAt: eachVideo.published_at,
+      }))
+      this.setState({videosList: videos, isLoading: renderConstants.success})
     } else {
       this.setState({isLoading: renderConstants.failure})
     }
@@ -80,33 +90,59 @@ class Home extends Component {
     </div>
   )
 
-  failureView = () => <FailureView clickRetry={this.clickRetry} />
+  failureView = () => (
+    <ModeContext.Consumer>
+      {value => {
+        const {isDark} = value
+        const failureImage = isDark
+          ? 'https://assets.ccbp.in/frontend/react-js/nxt-watch-failure-view-dark-theme-img.png'
+          : 'https://assets.ccbp.in/frontend/react-js/nxt-watch-failure-view-light-theme-img.png'
+        console.log(isDark)
+        return (
+          <div className="failure-container">
+            <img
+              src={failureImage}
+              alt="failure view"
+              className="failure-img"
+            />
+            <h1>Oops! Something Went Wrong</h1>
+            <p>
+              We are having some trouble to complete your request. Please try
+              again.
+            </p>
+            <CustomButton
+              type="button"
+              onClick={this.getVideos}
+              className="retry-btn"
+            >
+              Retry
+            </CustomButton>
+          </div>
+        )
+      }}
+    </ModeContext.Consumer>
+  )
 
   successView = () => {
     const {videosList} = this.state
-    const videos = videosList.videos.map(eachVideo => ({
-      id: eachVideo.id,
-      title: eachVideo.title,
-      thumbnailUrl: eachVideo.thumbnail_url,
-      channel: eachVideo.channel,
-      viewCount: eachVideo.view_count,
-      publishedAt: eachVideo.published_at,
-    }))
-
-    return videosList.total === 0 ? (
-      <HomeContainer>
-        <img
-          src="https://assets.ccbp.in/frontend/react-js/nxt-watch-no-search-results-img.png"
-          alt="no videos"
-          className="no-videos-img"
-        />
-        <h1>No Search results found</h1>
-        <p>Try different key words or remove search filter</p>
-        <CustomButton>Retry</CustomButton>
-      </HomeContainer>
-    ) : (
+    if (videosList.length === 0) {
+      return (
+        <NoVideosContainer>
+          <FailureImg
+            src="https://assets.ccbp.in/frontend/react-js/nxt-watch-no-search-results-img.png"
+            alt="no videos"
+          />
+          <FailureText>No Search results found</FailureText>
+          <FailureText as="p">
+            Try different key words or remove search filter
+          </FailureText>
+          <CustomButton onClick={this.getVideos}>Retry</CustomButton>
+        </NoVideosContainer>
+      )
+    }
+    return (
       <ul className="videos-list">
-        {videos.map(eachVideo => (
+        {videosList.map(eachVideo => (
           <Video key={eachVideo.id} eachVideo={eachVideo} />
         ))}
       </ul>
@@ -160,25 +196,27 @@ class Home extends Component {
                       </button>
                     </BannerContainer>
                   )}
-                  <HomeContainer bgColor={isDark} data-testid="home">
-                    <div className="search-input-container">
-                      <input
-                        type="search"
-                        className="search-input"
-                        value={searchValue}
-                        onKeyDown={this.pressEnter}
-                        onChange={this.onChangeSearch}
-                      />
-                      <button
-                        type="button"
-                        onClick={this.clickSearchIcon}
-                        data-testid="searchButton"
-                      >
-                        <AiOutlineSearch className="search-icon" />
-                      </button>
-                    </div>
+                  <HomeContainer data-testid="home" bgColor={isDark}>
+                    <div>
+                      <div className="search-input-container">
+                        <input
+                          type="search"
+                          className="search-input"
+                          value={searchValue}
+                          onKeyDown={this.pressEnter}
+                          onChange={this.onChangeSearch}
+                        />
+                        <button
+                          type="button"
+                          onClick={this.clickSearchIcon}
+                          data-testid="searchButton"
+                        >
+                          <AiOutlineSearch className="search-icon" />
+                        </button>
+                      </div>
 
-                    {this.renderResult()}
+                      {this.renderResult()}
+                    </div>
                   </HomeContainer>
                 </div>
               </div>

@@ -28,8 +28,8 @@ const SavedVideos = () => (
                       <h1>Saved Videos</h1>
                     </div>
                     <TrendingContainer
-                      bgColor={isDark}
                       data-testid="savedVideos"
+                      bgColor={isDark}
                     >
                       {savedVideos.length === 0 ? (
                         <div className="no-videos-container">

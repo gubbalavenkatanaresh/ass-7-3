@@ -40,6 +40,7 @@ const Video = props => {
                   <div>
                     <p>{viewCount}</p>
                     <p>{distanceTime}</p>
+                    <p>{publishedAt}</p>
                   </div>
                 </div>
               </div>
